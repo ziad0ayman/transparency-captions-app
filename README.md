@@ -1,5 +1,5 @@
 # Transparency Captions App 🎬
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Demo-blue)](https://huggingface.co/spaces/YOUR_USERNAME/YOUR_SPACE_NAME)
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Demo-blue)](https://ziad1ayman1-transparency-captions-app.hf.space/)
 
 This modular Python application automates the creation of professional transparent background videos with synchronized, "karaoke-style" animated subtitles. It is designed to take an English audio file and output a high-quality .mov file with an alpha channel, perfect for dropping directly into video editors like Premiere Pro or DaVinci Resolve.
 
