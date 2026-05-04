@@ -13,37 +13,34 @@ audio_file = st.file_uploader("Upload Audio", type=["mp3", "wav", "m4a"])
 
 if audio_file is not None:
     if st.button("Generate Video"):
-        with st.spinner("Step 1: Transcribing & Generating Subtitles..."):
-            with tempfile.TemporaryDirectory() as tmpdir:
-                
-                # FIX 1: Preserve the original file extension (e.g., .mp3)
-                file_extension = os.path.splitext(audio_file.name)[1]
-                input_path = os.path.join(tmpdir, f"input_audio{file_extension}")
-                
-                with open(input_path, "wb") as f:
-                    f.write(audio_file.getbuffer())
-                
-                ass_file = os.path.join(tmpdir, "subtitles.ass")
-                
-                # FIX 2: Change output to WebM
-                output_vid = os.path.join(tmpdir, "output.webm") 
-                
+        # 1. Open the temp directory first
+        with tempfile.TemporaryDirectory() as tmpdir:
+            file_extension = os.path.splitext(audio_file.name)[1]
+            input_path = os.path.join(tmpdir, f"input_audio{file_extension}")
+            
+            with open(input_path, "wb") as f:
+                f.write(audio_file.getbuffer())
+            
+            ass_file = os.path.join(tmpdir, "subtitles.ass")
+            output_vid = os.path.join(tmpdir, "output.webm") 
+            
+            # 2. Start the first spinner
+            with st.spinner("Step 1: Transcribing & Generating Subtitles..."):
                 generate_karaoke_ass(input_path, ass_file)
-                
-                st.spinner("Step 2: Rendering Transparent Video (This takes time)...")
-                
-                # FIX 3: Catch the exact error message from the engine
+            
+            # 3. The first spinner ends here. Now start the second one!
+            with st.spinner("Step 2: Rendering Transparent WebM Video (This takes time)..."):
                 success, error_msg = process_video(ass_file, input_path, output_vid)
-                
-                if success:
-                    st.success("Video Rendered Successfully!")
-                    with open(output_vid, "rb") as f:
-                        st.download_button(
-                            label="Download Transparent Video",
-                            data=f,
-                            file_name="captions.webm",
-                            mime="video/webm"
-                        )
-                else:
-                    # Print the exact crash reason to the UI
-                    st.error(f"Video rendering failed! FFmpeg Error:\n\n{error_msg}")
+            
+            # 4. Handle the results
+            if success:
+                st.success("Video Rendered Successfully!")
+                with open(output_vid, "rb") as f:
+                    st.download_button(
+                        label="Download Transparent .webm",
+                        data=f,
+                        file_name="captions.webm",
+                        mime="video/webm"
+                    )
+            else:
+                st.error(f"Video rendering failed! FFmpeg Error:\n\n{error_msg}")
