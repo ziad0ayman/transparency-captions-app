@@ -1,16 +1,24 @@
 import subprocess
 import os
-
+import shutil
+    
 def process_video(ass_path, audio_path, output_path):
 
     
-    # 1. FIX: FFmpeg 'ass' filter requires special escaping for Windows paths.
-    # We replace backslashes with forward slashes and escape the colon.
-    escaped_ass_path = ass_path.replace("\\", "/").replace(":", "\\:")
+# 1. Check if FFmpeg is actually installed in the system path
+    ffmpeg_bin = shutil.which("ffmpeg")
+    if not ffmpeg_bin:
+        print("FFmpeg not found in system path.")
+        return False
+
+    # 2. Linux (Streamlit Cloud) does NOT need the colon escaping like Windows
+    # Windows needs 'C\:', but Linux just needs a clean path.
+    if os.name == 'nt':  # Windows
+        escaped_ass_path = ass_path.replace("\\", "/").replace(":", "\\:")
+    else:  # Linux (Streamlit Cloud)
+        escaped_ass_path = ass_path
     
-    # 2. OPTIMIZATION: Using h264_nvenc for your RTX 3090. 
-    # Note: 'qtrle' is purely CPU-based. To use the GPU while keeping 
-    # transparency, we use HEVC (hvc1) which supports alpha on modern systems.
+    # 2. OPTIMIZATION: Using h264_nvenc. 
     
     command = [
         "ffmpeg",
