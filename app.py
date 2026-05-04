@@ -7,38 +7,43 @@ from video_engine import process_video
 st.set_page_config(page_title="Auto-Captions Pro", page_icon="🎬")
 
 st.title("🎬 Transparent Caption Generator")
-st.info("Upload audio to get a professional .mov with vanilla karaoke subtitles.")
+st.info("Upload audio to get a professional transparent video with animated subtitles.")
 
 audio_file = st.file_uploader("Upload Audio", type=["mp3", "wav", "m4a"])
 
 if audio_file is not None:
     if st.button("Generate Video"):
         with st.spinner("Step 1: Transcribing & Generating Subtitles..."):
-            # Create a persistent temp directory for this session
             with tempfile.TemporaryDirectory() as tmpdir:
-                # Save uploaded audio
-                input_path = os.path.join(tmpdir, "input_audio")
+                
+                # FIX 1: Preserve the original file extension (e.g., .mp3)
+                file_extension = os.path.splitext(audio_file.name)[1]
+                input_path = os.path.join(tmpdir, f"input_audio{file_extension}")
+                
                 with open(input_path, "wb") as f:
                     f.write(audio_file.getbuffer())
                 
                 ass_file = os.path.join(tmpdir, "subtitles.ass")
-                output_mov = os.path.join(tmpdir, "output.mov")
                 
-                # Run Module 1
+                # FIX 2: Change output to WebM
+                output_vid = os.path.join(tmpdir, "output.webm") 
+                
                 generate_karaoke_ass(input_path, ass_file)
                 
-                st.spinner("Step 2: Rendering Transparent Video...")
-                # Run Module 2
-                success = process_video(ass_file, input_path, output_mov)
+                st.spinner("Step 2: Rendering Transparent Video (This takes time)...")
+                
+                # FIX 3: Catch the exact error message from the engine
+                success, error_msg = process_video(ass_file, input_path, output_vid)
                 
                 if success:
                     st.success("Video Rendered Successfully!")
-                    with open(output_mov, "rb") as f:
+                    with open(output_vid, "rb") as f:
                         st.download_button(
-                            label="Download Transparent .mov",
+                            label="Download Transparent Video",
                             data=f,
-                            file_name="captions.mov",
-                            mime="video/quicktime"
+                            file_name="captions.webm",
+                            mime="video/webm"
                         )
                 else:
-                    st.error("Video rendering failed. Check FFmpeg installation.")
+                    # Print the exact crash reason to the UI
+                    st.error(f"Video rendering failed! FFmpeg Error:\n\n{error_msg}")
