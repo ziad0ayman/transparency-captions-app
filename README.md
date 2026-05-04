@@ -33,9 +33,9 @@ pip install -r requirements.txt
 💻 How to Use
 To launch the application locally, run the following command in your terminal:
 
-    ```Bash
-    streamlit run app.py
-    ```
+```Bash
+streamlit run app.py
+```
 ## Workflow:
 
 ### Upload: Select an English audio file (.mp3, .wav, or .m4a).  
