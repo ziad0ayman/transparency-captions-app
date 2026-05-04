@@ -41,9 +41,4 @@ streamlit run app.py
 
 ### Generate: Click the "Generate Video" button. The app will first transcribe the audio using the Whisper 'small' model and then render the video.  
 
-### Download: Once complete, a download button will appear for your captions.mov file.  
-
-## 📝 Technical Details
-Transparency: The app uses the qtrle (QuickTime Animation) codec to support the alpha channel.  
- 
-Subtitles: Styled with a bold "Impact" font, white primary color, and yellow highlights for active words. 
+### Download: Once complete, a download button will appear for your captions.webm file.  
