@@ -1,13 +1,13 @@
-# Transparency Captions App 🎬
+# Chroma Key Captions App 🎬
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Demo-blue)](https://ziad1ayman1-transparency-captions-app.hf.space/)
 
-This modular Python application automates the creation of professional transparent background videos with synchronized, "karaoke-style" animated subtitles. It is designed to take an English audio file and output a high-quality .mov file with an alpha channel, perfect for dropping directly into video editors like Premiere Pro or DaVinci Resolve.
+This modular Python application automates the creation of professional green screen videos with synchronized, "karaoke-style" animated subtitles. It takes an English audio file and outputs a high-quality .mp4 file with a solid green background, perfect for keying out (Ultra Key / Chroma Key) directly in video editors like Premiere Pro, DaVinci Resolve, or CapCut.
 
 ## 📂 Project Structure
 The project is split into three distinct modules to ensure clean code and easy maintenance:  
 
 * **`subtitle_generator.py`**: Uses OpenAI Whisper to transcribe audio and generate a .ass (Advanced Substation Alpha) file with precise word-level timing.  
-* **`video_engine.py`**: A robust FFmpeg wrapper that renders the transparent video, handles Windows path escaping, and muxes the audio.  
+* **`video_engine.py`**: A robust FFmpeg wrapper that renders the green screen video, handles Windows path escaping, and muxes the audio.  
 * **`app.py`**: The Streamlit frontend that provides a user-friendly interface for uploading audio and downloading the final video.
   
 ## 🛠️ Prerequisites
