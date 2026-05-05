@@ -14,13 +14,16 @@ def process_video(ass_path, audio_path, output_path):
     command = [
         ffmpeg_bin,
         "-f", "lavfi",
-        "-i", "color=c=black@0:s=1920x1080",
+        # Pure green background instead of transparent black
+        "-i", "color=c=#00FF00:s=1920x1080", 
         "-i", audio_path,
         "-vf", f"ass={ass_input}",
-        "-c:v", "libvpx-vp9",
-        "-pix_fmt", "yuva420p",
-        "-auto-alt-ref", "0",
-        "-c:a", "libopus",
+        # NVIDIA Hardware Encoder (H.264)
+        "-c:v", "h264_nvenc", 
+        # Standard pixel format (No Alpha)
+        "-pix_fmt", "yuv420p", 
+        # AAC is the standard audio codec for MP4
+        "-c:a", "aac", 
         "-shortest",
         "-y",
         output_path
@@ -28,8 +31,6 @@ def process_video(ass_path, audio_path, output_path):
 
     try:
         subprocess.run(command, check=True, capture_output=True, text=True, cwd=cwd)
-        # Return True and an empty error message
         return True, ""
     except subprocess.CalledProcessError as e:
-        # Return False and the exact reason it crashed
         return False, e.stderr
